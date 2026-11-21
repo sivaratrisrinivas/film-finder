@@ -2,9 +2,9 @@
 
 Source: https://inference-docs.cerebras.ai/api-reference/chat-completions. Fetched 2026-11-21.
 
-## Kimi model ID: UNRESOLVED
-- Handoff says `moonshotai-kimi-k3.1-pro-trial`. On 2026-11-21 at 18:15 UTC, `GET /v1/models` listed `moonshotai-kimi-k3.1-pro-test`. Both returned 404 `model_not_found` on chat. Re-check before coding:
-  `curl -s https://api.cerebras.ai/v1/models -H "Authorization: Bearer $CEREBRAS_API_KEY"`
+## Kimi model ID: `moonshotai-kimi-k3.1-pro-trial` (VERIFIED 2026-11-21 18:21 UTC)
+- Returns HTTP 200 with total_time of about 0.12s for a short reply. `-test` shows up in `/v1/models` but returns `model_not_found`. Ignore it.
+- Reasoning is ON by default: "Say OK." used 36 reasoning tokens. With `reasoning_effort: "low"` it used 14. Reasoning tokens count toward the 100K TPM limit.
 
 ## Endpoint
 `POST https://api.cerebras.ai/v1/chat/completions`, header `Authorization: Bearer $CEREBRAS_API_KEY`. OpenAI-compatible.
@@ -13,7 +13,7 @@ Source: https://inference-docs.cerebras.ai/api-reference/chat-completions. Fetch
 | Param | Values |
 |---|---|
 | `model`, `messages` | required. Roles: system, user, assistant, tool |
-| `reasoning_effort` | kimi-k3.1-pro: `low`, `medium`, `high`, `max` (docs default `max`; handoff says thinking is off by default, so verify) |
+| `reasoning_effort` | kimi-k3.1-pro: `low`, `medium`, `high`, `max` (docs default `max`; verified that reasoning is on when unset). Use `low` for cheap steps |
 | `reasoning_format` | `parsed` (default for kimi-k3.1-pro) puts reasoning in `message.reasoning` |
 | `tools` | `[{type:"function", function:{name, description, parameters, strict}}]` |
 | `tool_choice` | `none`, `auto`, `required`, `{type:"function",function:{name}}` |
@@ -35,6 +35,6 @@ Source: https://inference-docs.cerebras.ai/api-reference/chat-completions. Fetch
 ```bash
 curl https://api.cerebras.ai/v1/chat/completions \
   -H "Content-Type: application/json" -H "Authorization: Bearer $CEREBRAS_API_KEY" \
-  -d '{"model":"<KIMI_ID>","reasoning_effort":"low","max_completion_tokens":256,
+  -d '{"model":"moonshotai-kimi-k3.1-pro-trial","reasoning_effort":"low","max_completion_tokens":256,
        "messages":[{"role":"user","content":"Hello!"}]}'
 ```

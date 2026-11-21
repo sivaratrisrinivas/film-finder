@@ -20,9 +20,8 @@ Source: docs/handoff.md (no official rules page saved yet; paste it here if we g
 
 ## Constraints
 - 100 requests and 100K tokens per minute. Cached tokens don't count.
-- At 18:15 UTC Sat the key could list `moonshotai-kimi-k3.1-pro-test`, but chat calls to both `-test` and `-trial` returned `model_not_found`. **Blocker. Ask organizers which ID to use and when access goes live.**
+- Kimi is live as `moonshotai-kimi-k3.1-pro-trial` (verified 18:21 UTC Sat). Reasoning is on by default and its tokens count toward the TPM limit.
 
 ## Ask an organizer today
-1. The exact Kimi model ID: handoff says `-trial`, `/v1/models` lists `-test`. Neither works yet.
-2. Does using a GPU provider only for the side-by-side comparison break the "must use Kimi on Cerebras" rule? (It shouldn't, if the bot itself runs only on Cerebras.)
-3. Is a Reddit post required, or only the X post?
+1. Does using a GPU provider only for the side-by-side comparison break the "must use Kimi on Cerebras" rule? (It shouldn't, if the bot itself runs only on Cerebras.)
+2. Is a Reddit post required, or only the X post?
