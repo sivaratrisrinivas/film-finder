@@ -35,3 +35,8 @@ An agent that finds a film from a half-remembered description (r/tipofmytongue s
 4. OpenClaw bot on Telegram.
 5. Small eval on `tomt_dev_100.csv`: hit@1, "not sure" rate, latency, tokens per solve.
 6. Demo video and X post.
+
+## Kickoff update (Nov 21, 11:49 PM IST)
+- Kimi WORKS with model `moonshotai-kimi-k3.1-pro-trial` (~0.12s per short reply). `-test` is listed but returns model_not_found — ignore it.
+- Kimi reasons by default (79 reasoning tokens on a 5-word reply). Reasoning tokens count toward the 100K TPM limit; set `reasoning_effort` low for cheap steps.
+- Next: set this model as OpenClaw's default (re-run `openclaw onboard` → Cerebras → saved sign-in; the model may not be in the plugin's built-in list, so it might need adding by hand), then add a Telegram channel.
