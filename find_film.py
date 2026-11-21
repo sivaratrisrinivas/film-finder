@@ -83,9 +83,11 @@ def kimi(system, user, schema, name, effort, stats):
         "Content-Type": "application/json", "Authorization": f"Bearer {_key()}"})
     for delay in (1, 2, None):  # brief retry on 429, then give up as "busy"
         try:
-            with urllib.request.urlopen(req, timeout=60) as r:
+            with urllib.request.urlopen(req, timeout=20) as r:
                 data = json.loads(r.read())
             break
+        except TimeoutError:  # Cerebras sometimes queues silently instead of returning 429
+            raise Busy()
         except urllib.error.HTTPError as e:
             if e.code != 429:
                 raise
