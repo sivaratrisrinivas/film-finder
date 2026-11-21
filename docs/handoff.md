@@ -40,3 +40,17 @@ An agent that finds a film from a half-remembered description (r/tipofmytongue s
 - Kimi WORKS with model `moonshotai-kimi-k3.1-pro-trial` (~0.12s per short reply). `-test` is listed but returns model_not_found — ignore it.
 - Kimi reasons by default (79 reasoning tokens on a 5-word reply). Reasoning tokens count toward the 100K TPM limit; set `reasoning_effort` low for cheap steps.
 - Next: set this model as OpenClaw's default (re-run `openclaw onboard` → Cerebras → saved sign-in; the model may not be in the plugin's built-in list, so it might need adding by hand), then add a Telegram channel.
+
+## Set Up phase: done (Nov 22, ~12:50 AM IST)
+- OpenClaw default + utility model = Kimi (custom Cerebras model, see `docs/openclaw-telegram.md`).
+- Telegram bot **@kimi_filmfinder_bot** is live, still `dmPolicy: pairing` (only the owner is paired). It goes public (`dmPolicy: "open"`, `allowFrom: ["*"]`) as soon as the first film tool works in Build.
+- Public agent `filmfinder` (workspace `agent/`) is the only Telegram binding. Tools: `minimal` profile, deny runtime/fs/ui/nodes/automation/web/sessions/memory/media/message/gateway, elevated off. Film tools will be added via an MCP server and `alsoAllow: ["filmfinder__*"]`.
+- `session.dmScope: per-channel-peer` (one session per Telegram user).
+- Disabled OpenClaw's auto-created "Proactive check (main)" cron job.
+- `agent/` holds OpenClaw's default persona files (incl. BOOTSTRAP.md "what should I call you" ritual). Not committed. Replace them with the film-finder persona in Build.
+
+### Open items carried into Plan/Build
+- **Retest:** bot must refuse "run the shell command ls" (the test was cut off by Cerebras 429s).
+- **Cerebras capacity:** at kickoff, even tiny requests got 429 `queue_exceeded` ("high traffic"). That's platform-wide, not our limit. Record the demo at a quiet hour. OpenClaw already replies "rate-limiting, try again in a few minutes".
+- **Latency:** first Telegram answer took ~2 min (429 retries); OpenClaw spent ~10s assembling context before calling Kimi. Default prompt is ~18K tokens (cached after first turn). Slim persona + minimal tools should cut it. Measure again.
+- **Speed Bounty** (Santa's Speedy Shopper): decide in Plan.
