@@ -58,5 +58,5 @@ An agent that finds a film from a half-remembered description (r/tipofmytongue s
 ## How to resume in a new session
 1. Read `CLAUDE.md` (auto-loaded), this file, `docs/schedule.md`, `docs/hackathon.md`.
 2. Working style: go **phase by phase** on the cheat sheet (https://thehackathonplaybook.dev/cheat-sheet). At each phase, name the cheat-sheet prompt being applied, do it in small steps, and **wait for the user's OK** before each config change and before moving to the next phase. No rush.
-3. Re-create the 30-minute commit timer (session-only cron): commit if `git status` shows changes, never `.env`, don't commit `agent/` until the persona is rewritten.
+3. Re-create the 30-minute commit timer (session-only cron): commit if `git status` shows changes, then `git push origin main` (never force), never `.env` or `.cache/`. `agent/` (persona) is committed now.
 4. Next phase: **03 Plan**. Write `PRD.md` (demo path, clue → search → verify → answer/"not sure", MCP tool list, persona, out of scope) and time-box Build against the schedule. Decisions to ask: Speed Bounty yes/no, GPU side-by-side method, how to show Kimi's raw speed despite OpenClaw overhead.

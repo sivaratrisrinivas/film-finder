@@ -68,7 +68,7 @@ Define success criteria before starting. Loop until verified.
 - Keep answers under 200 words unless I ask for code.
 - If something will take longer than the time we have left, say so and offer the smaller version instead.
 - Rate limit: 100 requests and 100K tokens per minute. Keep the system prompt byte-stable so cached tokens don't count. Cache every TMDB/Wikipedia call.
-- Commit every 30 minutes (a time-boxed exception to "don't commit unless asked").
+- Commit and push every 30 minutes (a time-boxed exception to "don't commit unless asked").
 
 ## About this project
 
@@ -81,4 +81,4 @@ Define success criteria before starting. Loop until verified.
 
 - Never commit secrets, .env files, or credentials. Keys live in environment variables.
 - Ask before anything hard to undo: deleting files, migrations, deploys, force pushes.
-- Never push or deploy unless I ask (routine 30-minute commits are allowed, see above).
+- Never deploy unless I ask. Push to `origin main` after every commit (plain push, never force; authorized for the hackathon).
