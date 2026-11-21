@@ -4,7 +4,7 @@
 An agent that finds a film from a half-remembered description (r/tipofmytongue style). Asks one follow-up if needed, searches, verifies its guess against the user's clues, and says "not sure" instead of guessing wrong.
 
 ## Hackathon: Cerebras x Kimi K3.1 Pro (24h, deadline Sun Nov 22, 11:30 PM IST)
-- MUST use Kimi K3.1 Pro on Cerebras as the core model: `moonshotai-kimi-k3.1-pro-trial` (standard Cerebras API, base URL https://api.cerebras.ai/v1). Thinking is off by default — set `reasoning_effort` where needed.
+- MUST use Kimi K3.1 Pro on Cerebras as the core model: `moonshotai-kimi-k3.1-pro-trial` (standard Cerebras API, base URL https://api.cerebras.ai/v1). Thinking is ON by default (reasoning tokens count toward TPM) — set `reasoning_effort: "low"` for cheap steps.
 - MUST use the OpenClaw harness.
 - Limits: 100 requests and 100K tokens per minute. Cached tokens don't count, so keep the system prompt stable.
 - Core functionality must be built during the hackathon; scaffolding and data prep are allowed.
