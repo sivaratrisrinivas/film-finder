@@ -81,7 +81,7 @@ def kimi(system, user, schema, name, effort, stats):
     }).encode()
     req = urllib.request.Request(URL, data=body, headers={
         "Content-Type": "application/json", "Authorization": f"Bearer {_key()}"})
-    for delay in (1, 2, None):  # brief retry on 429, then give up as "busy"
+    for delay in (1, 2, 4, 8, None):  # retry on 429 (~15s total), then give up as "busy"
         try:
             with urllib.request.urlopen(req, timeout=20) as r:
                 data = json.loads(r.read())
