@@ -1,11 +1,13 @@
 """TMDB and Wikipedia lookups, each cached on disk as JSON in .cache/."""
 import hashlib
+import html
 import json
 import os
 import re
+import time
+import urllib.parse
+import urllib.request
 from pathlib import Path
-
-import httpx2
 
 CACHE = Path(__file__).parent / ".cache"
 CACHE.mkdir(exist_ok=True)
@@ -31,9 +33,17 @@ def _get(url, params, headers):
         stats["hits"] += 1
         return json.loads(path.read_text())
     stats["misses"] += 1
-    r = httpx2.get(url, params=params, headers=headers, timeout=15)
-    r.raise_for_status()
-    data = r.json()
+    # urllib, not httpx2: Wikimedia returns 403 to httpx2 even with a proper User-Agent.
+    req = urllib.request.Request(f"{url}?{urllib.parse.urlencode(params)}", headers=headers)
+    for attempt in range(5):  # home network resets ~half of TMDB TLS handshakes
+        try:
+            with urllib.request.urlopen(req, timeout=15) as r:
+                data = json.loads(r.read())
+            break
+        except (ConnectionResetError, urllib.error.URLError) as e:
+            if attempt == 4 or isinstance(e, urllib.error.HTTPError):
+                raise
+            time.sleep(0.5)
     path.write_text(json.dumps(data))
     return data
 
@@ -68,7 +78,7 @@ def tmdb_details(tmdb_id):
 def wiki_search(query, limit=5):
     data = _get(WIKI, {"action": "query", "list": "search", "srsearch": query,
                        "srlimit": limit, "format": "json"}, UA)
-    return [{"title": s["title"], "snippet": re.sub(r"<[^>]+>", "", s["snippet"])}
+    return [{"title": s["title"], "snippet": html.unescape(re.sub(r"<[^>]+>", "", s["snippet"]))}
             for s in data["query"]["search"]]
 
 
