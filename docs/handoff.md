@@ -54,3 +54,9 @@ An agent that finds a film from a half-remembered description (r/tipofmytongue s
 - **Cerebras capacity:** at kickoff, even tiny requests got 429 `queue_exceeded` ("high traffic"). That's platform-wide, not our limit. Record the demo at a quiet hour. OpenClaw already replies "rate-limiting, try again in a few minutes".
 - **Latency:** first Telegram answer took ~2 min (429 retries); OpenClaw spent ~10s assembling context before calling Kimi. Default prompt is ~18K tokens (cached after first turn). Slim persona + minimal tools should cut it. Measure again.
 - **Speed Bounty** (Santa's Speedy Shopper): decide in Plan.
+
+## How to resume in a new session
+1. Read `CLAUDE.md` (auto-loaded), this file, `docs/schedule.md`, `docs/hackathon.md`.
+2. Working style: go **phase by phase** on the cheat sheet (https://thehackathonplaybook.dev/cheat-sheet). At each phase, name the cheat-sheet prompt being applied, do it in small steps, and **wait for the user's OK** before each config change and before moving to the next phase. No rush.
+3. Re-create the 30-minute commit timer (session-only cron): commit if `git status` shows changes, never `.env`, don't commit `agent/` until the persona is rewritten.
+4. Next phase: **03 Plan**. Write `PRD.md` (demo path, clue → search → verify → answer/"not sure", MCP tool list, persona, out of scope) and time-box Build against the schedule. Decisions to ask: Speed Bounty yes/no, GPU side-by-side method, how to show Kimi's raw speed despite OpenClaw overhead.
