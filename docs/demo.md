@@ -6,7 +6,7 @@ Hard rules (hackathon.md): ≤60s; no notifications, browser tabs, API keys, ema
 ## Shot list
 | Time | Shot | On screen | Voice-over / caption |
 |---|---|---|---|
-| 0–3s | Hook | Telegram: user types a vague memory, e.g. "anime short, astronaut finds a space station that's a dead opera singer's memories" | "You remember the scene. Not the title." |
+| 0–3s | Hook | Telegram: user types a vague memory, "I think John Goodman or someone who looks like him works for the CIA, in a pretty memorable scene he screams really loudly at someone in his office about his experience and then breaks a window." → Charlie Wilson's War (bot: "Philip Seymour Hoffman… explaining the John Goodman look-alike memory") | "You remember the scene. Not the title." |
 | 3–15s | Answer | Bot replies: 🎬 title, poster, matched clues, `⚡ Kimi Xs · search+verify Ys` | "Kimi K3.1 Pro on Cerebras pulls the clues, searches TMDB and Wikipedia, and checks its guess." |
 | 15–28s | Follow-up | Vague message ("guy stuck reliving things") → one question → "guest at a wedding" → Palm Springs | "Not sure? It asks one question instead of guessing." |
 | 28–48s | Speed race | `python side_by_side.py`: same model, same prompt, Cerebras vs Nebius vs Together, live tok/s | "Same model, same prompt. Cerebras: ~290 tokens/sec. GPU hosts: ~190 and ~45." (5-run medians: 293 / 192 / 44 tok/s; say tok/s, not "answers first") |
@@ -16,7 +16,7 @@ Hard rules (hackathon.md): ≤60s; no notifications, browser tabs, API keys, ema
 ## Must be true before recording
 - [ ] Cerebras queue < 2s (check with the timer's queue probe).
 - [ ] Telegram round trip is fast enough to show uncut. Today it's ~1 min: OpenClaw context ~15s, search+verify 14–35s (Kimi only ~5s of that, so most is TMDB/Wikipedia; the home network resets TLS handshakes; the hotspot was faster). If any wait is cut, caption it "trimmed".
-- [ ] Hook example chosen and tested end to end (Magnetic Rose was unstable in eval: once Memories, once wrong).
+- [x] Hook chosen: Charlie Wilson's War (2/2 correct via `find_film.py`, Kimi 3.4s, search+verify 9.2s). Not yet tested on Telegram.
 - [ ] Bot public (`dmPolicy: open`) so the CTA works.
 - [ ] Do Not Disturb on, single clean browser window, no `.env` or terminal history with keys.
 

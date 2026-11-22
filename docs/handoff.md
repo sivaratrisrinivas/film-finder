@@ -93,7 +93,7 @@ Next steps, in order:
 - [x] README, `docs/demo.md` (60s shot list, pre-recording checklist, X + Reddit post copy; user has X Premium, handles @SrinivasSi78619 / u/srinivassachin), `docs/hf-inference.md` written. Bot display name updated by the user; username @kimi_filmfinder_bot.
 
 ### Next steps, in order (Nov 22, ~12:40 PM IST)
-- [ ] Pick the demo hook: 2–3 candidate posts the bot reliably got right, test each once with `python find_film.py "<text>"`, user chooses.
+- [x] Demo hook (12:45 PM IST): **Charlie Wilson's War** (misremembered actor: John Goodman → Philip Seymour Hoffman). Local Hero and Fish Story (short one-line prompt) also 2/2 correct, as backups. Kimi ~3s, search+verify 5–9s each.
 - [ ] Re-measure the Telegram round trip (user sends one fresh message after `/new`). It was ~1 min this morning (OpenClaw context ~15s + slow TMDB). If waits are cut in the video, caption "trimmed".
 - [ ] Go public right before recording: `dmPolicy: "open"`, `allowFrom: ["*"]` under `channels.telegram` (user runs it; command in the earlier item above).
 - [ ] Record the 60s video (only when the Cerebras queue < 2s), then post on X and Reddit before 11:30 PM IST.
