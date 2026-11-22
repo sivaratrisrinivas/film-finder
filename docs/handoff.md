@@ -86,14 +86,22 @@ Next steps, in order:
 - [x] Retest on Telegram after `/new` (6:00 AM IST): "guy stuck reliving things" got one follow-up (weatherman / soldier / wedding guest); "guest at a wedding" got Palm Springs (2020) with poster. New timing label shows with no gateway restart (`⚡ Kimi 5.15s · search+verify 34.56s`). The ask reply also carried a timing line (AGENTS.md says to send only the question; harmless). Round trip ~1 min, no 429 stalls.
 - [ ] Go public: `dmPolicy: "open"`, `allowFrom: ["*"]` under `channels.telegram`. **Decision: wait until close to demo recording** so strangers don't eat quota during evals. The auto-mode classifier blocked the assistant from applying it; the user runs it: `! openclaw config patch '{channels:{telegram:{dmPolicy:"open",allowFrom:["*"]}}}' && systemctl --user restart openclaw-gateway` (patch syntax unverified).
 - [x] `python eval.py tomt_dev_100.csv 30` done twice (verify prompt tightened in between); results in `eval_results.md`. Confident wrong 19% → 7%, hit@1 ~48% hand-checked. Bug fixed: poster backfill took the first TMDB hit (wrong remake year), now passes Kimi's `year`. `max_completion_tokens` 4000 → 8000 (a `finish_reason=length` with no content caused a crash; missing content now → `busy`).
-- [ ] `python eval.py tomt_recent.csv`: 9 of 13 busy (Cerebras queue). Rerun the busy ones when quiet. Then the 100-post dev eval if quota allows.
-- [ ] `side_by_side.py` written (Cerebras vs `moonshotai/Kimi-K3.1-Pro:nebius` vs `:together` via HF router, same model and prompt, streaming, live rows). `HF_TOKEN` in `.env`. Docs: `docs/hf-inference.md`. HF rows tested (Nebius 154 tok/s, Together 38 tok/s). **Cerebras row not run yet**: queue was 42s at 7:05 AM IST. Record the race only when queue < 2s. Earlier Cerebras sample: ~247 tok/s, so the gap vs Nebius may be small; vs Together large.
-- The background watcher loop was blocked by the auto-mode classifier; the 30-min timer now does one queue check per tick instead.
-- [ ] 9:00 AM IST panic check: no film-tool answers on Telegram means cut to the smallest working version.
+- [x] Evals done (Nov 22, 9:16–10:20 AM IST): 100 dev posts ~41% right / 14% confidently wrong (hand-checked); 13 recent posts 1 right, 2 asks with the right top candidate, 4 wrong (31%), so dev numbers are likely helped by memorization. All in `eval_results.md`.
+- [x] Speed race, `python side_by_side.py 2 5` (5-run medians): Cerebras 293 tok/s / 2.39s total (3/5 ok, two 429s), Nebius 192 tok/s / 1.55s, Together 44 tok/s / 4.84s. **Decision (user): option 1**, lead with honesty and claim highest tok/s only, never "answers faster than every GPU". Numbers are filled into README, `docs/demo.md` shot list and X/Reddit drafts.
+- [x] TMDB host switched to `api.tmdb.org` (api.themoviedb.org resets most TLS handshakes on Indian networks); search ~3s when the network behaves.
+- [x] OpenClaw dreaming turned OFF (`plugins.entries.memory-core.config.dreaming.enabled: false`, verified `openclaw cron list` = no automations). It had copied Telegram transcripts into `agent/memory/` and `agent/DREAMS.md` (now gitignored, not committed). Config backup was in the session scratchpad.
+- [x] README, `docs/demo.md` (60s shot list, pre-recording checklist, X + Reddit post copy; user has X Premium, handles @SrinivasSi78619 / u/srinivassachin), `docs/hf-inference.md` written. Bot display name updated by the user; username @kimi_filmfinder_bot.
+
+### Next steps, in order (Nov 22, ~12:40 PM IST)
+- [ ] Pick the demo hook: 2–3 candidate posts the bot reliably got right, test each once with `python find_film.py "<text>"`, user chooses.
+- [ ] Re-measure the Telegram round trip (user sends one fresh message after `/new`). It was ~1 min this morning (OpenClaw context ~15s + slow TMDB). If waits are cut in the video, caption "trimmed".
+- [ ] Go public right before recording: `dmPolicy: "open"`, `allowFrom: ["*"]` under `channels.telegram` (user runs it; command in the earlier item above).
+- [ ] Record the 60s video (only when the Cerebras queue < 2s), then post on X and Reddit before 11:30 PM IST.
+- Cerebras congestion pattern seen: busy ~1:30–5:10 AM and ~7:00–9:15 AM IST, quiet ~9:15 AM–12:30 PM IST. Expect the worst load near the deadline (8:30–11:30 PM IST); don't plan to record then.
 
 ## How to resume in a new session
 1. Read `CLAUDE.md` (auto-loaded), this file, `docs/schedule.md`, `docs/hackathon.md`.
 2. Working style: go **phase by phase** on the cheat sheet (https://thehackathonplaybook.dev/cheat-sheet). At each phase, name the cheat-sheet prompt being applied, do it in small steps, and **wait for the user's OK** before each config change and before moving to the next phase. No rush.
 3. Re-create the 30-minute commit timer (session-only cron): commit if `git status` shows changes, then `git push origin main` (never force), never `.env` or `.cache/`. `agent/` (persona) is committed now.
-4. Re-create the Cerebras watcher (background loop, every 3 min, tiny "Say ok" call, report `time_info.queue_time`; alert when < 2s). Background jobs die with the session.
+4. No background watcher (the auto-mode classifier blocks it). Instead the 30-min timer also makes ONE tiny "Say ok" call and reports `time_info.queue_time`. To test whether an eval is running use `ps -eo args | grep "[p]ython.*eval.py"` (pgrep -f matches itself).
 5. Continue from **"Build status"** below: the next action is the first unchecked item.
