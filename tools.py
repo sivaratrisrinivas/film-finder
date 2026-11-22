@@ -11,7 +11,8 @@ from pathlib import Path
 
 CACHE = Path(__file__).parent / ".cache"
 CACHE.mkdir(exist_ok=True)
-TMDB = "https://api.themoviedb.org/3"
+TMDB = "https://api.tmdb.org/3"  # api.themoviedb.org gets most TLS handshakes reset on Indian networks
+KEY_TMDB = "https://api.themoviedb.org/3"  # cache keys keep the old host so existing entries still hit
 WIKI = "https://en.wikipedia.org/w/api.php"
 UA = {"User-Agent": "film-finder-hackathon/0.1"}
 stats = {"hits": 0, "misses": 0}
@@ -27,7 +28,7 @@ def _token():
 
 
 def _get(url, params, headers):
-    key = hashlib.sha256(json.dumps([url, params], sort_keys=True).encode()).hexdigest()
+    key = hashlib.sha256(json.dumps([url.replace(TMDB, KEY_TMDB), params], sort_keys=True).encode()).hexdigest()
     path = CACHE / f"{key}.json"
     if path.exists():
         stats["hits"] += 1
@@ -37,7 +38,7 @@ def _get(url, params, headers):
     req = urllib.request.Request(f"{url}?{urllib.parse.urlencode(params)}", headers=headers)
     for attempt in range(8):  # Indian networks reset most TMDB TLS handshakes; resets are fast
         try:
-            with urllib.request.urlopen(req, timeout=15) as r:
+            with urllib.request.urlopen(req, timeout=5) as r:
                 data = json.loads(r.read())
             break
         except (ConnectionResetError, urllib.error.URLError) as e:

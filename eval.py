@@ -70,15 +70,21 @@ def main(path, n=None):
     import find_film as ff
     from find_film import find_film
     ff.TIMEOUT = 120  # wait out Cerebras queueing; the bot keeps 20s
+    ff.RETRY_DELAYS = (1, 2, 4, 8, 15, 30, 30, 30)  # ~2 min of 429 patience
     posts = list(csv.DictReader(open(ROOT / path)))[: int(n) if n else None]
     out = ROOT / "runs" / (Path(path).stem + ".jsonl")
     out.parent.mkdir(exist_ok=True)
+    # Resume: keep rows that already have a real verdict; only re-run missing or busy posts.
+    done = {r["id"]: r for r in map(json.loads, out.read_text().splitlines()) if r["result"]["verdict"] != "busy"} if out.exists() else {}
     rows = []
     with open(out, "w") as f:
         for i, p in enumerate(posts, 1):
-            res = find_film(p["query"])
-            row = {"id": p["id"], "group": p.get("group", ""), "answer": p["answer"],
-                   "hit": is_hit(res, p["answer"]), "result": res}
+            row = done.get(p["id"])
+            if not row:
+                res = find_film(p["query"])
+                row = {"id": p["id"], "group": p.get("group", ""), "answer": p["answer"],
+                       "hit": is_hit(res, p["answer"]), "result": res}
+            res = row["result"]
             f.write(json.dumps(row) + "\n")
             f.flush()
             rows.append(row)
