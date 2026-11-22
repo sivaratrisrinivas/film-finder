@@ -58,7 +58,7 @@ An agent that finds a film from a half-remembered description (r/tipofmytongue s
 ## Plan phase: DONE (Nov 22, ~1:20 AM IST)
 `PRD.md` approved. Decisions: Speed Bounty **skipped**; GPU side-by-side = same prompt, raw API script; reply ends with a timing line (Kimi time + total end-to-end). Additions: 429/timeout → `busy`; eval includes recent posts for memorization.
 
-## Build status (Nov 22, ~3:40 AM IST)
+## Build status (Nov 22, ~3:40 AM IST; see update below)
 Files (all committed and pushed):
 - `tools.py`: TMDB search/details + Wikipedia search/extract, disk cache `.cache/`, stdlib `urllib` (Wikimedia 403s `httpx2`), 5 retries (the home network resets ~half of TMDB TLS handshakes; the hotspot works). VERIFIED.
 - `find_film.py`: clues (Kimi low, json_schema) → search (TMDB + Wiki, Wiki-only fallback) → verify (Kimi medium). 429 → 2 retries → `busy`; 20s timeout → `busy`. CLI: `python find_film.py --dev 5` or `python find_film.py "<text>"`. Search + busy path VERIFIED; **Kimi steps never ran** (Cerebras outage), so json_schema `strict` on Cerebras is unverified.
@@ -71,10 +71,20 @@ Files (all committed and pushed):
 
 **Blocker:** since ~20:00 UTC Nov 21, Cerebras chat completions queue 18–55s (confirmed platform-wide by staff on Discord: "awaiting the service leveling out"). `/v1/models` works.
 
+## Build status update (Nov 22, ~5:55 AM IST)
+- Cerebras queue recovered to ~0.2s at 23:42 UTC, but 429s still come in bursts.
+- `find_film.py --dev 5`: 4/5 answered (Gone in 60 Seconds, Intersection, Into the Wild exact; "The Wisher (2002)" for Spliced, likely the US alias, not verified). Cypher = busy (probably a 20s timeout while Cerebras queued). json_schema `strict` WORKS on Cerebras. 429 retries raised to 1/2/4/8s (`find_film.py:84`).
+- **Telegram bug fixed:** OpenClaw's automatic Tool Search had deferred `filmfinder__find_film`, so Kimi answered from memory. Fix: `tools.toolSearch.exclude: [{source: "mcp", name: "filmfinder__*"}]` in `~/.openclaw/openclaw.json` (see `docs/openclaw-mcp.md`). After the fix plus `/new` in Telegram, the bot called the tool: poster, "Matched:", timing line.
+- Telegram end-to-end time was ~4 min: 15s OpenClaw context, 1.3s tool pick, ~17s tool, then ~3.5 min of Cerebras 429 retries on the final reply. The pipeline itself is ~35s.
+- Timing line relabelled to `⚡ Kimi Xs · search+verify Ys` (`agent/AGENTS.md:12`) because the tool can't see OpenClaw's own time. Not yet seen live (unverified whether a gateway restart is needed).
+- Vague query ("guy stuck reliving things") was tested only before the fix (it guessed). Retest after `/new`.
+- Config backups: `openclaw.json.before-toolsearch` / `.before-public` were in the session scratchpad (may be gone).
+
 Next steps, in order:
-- [ ] When the queue is under 2s: `python find_film.py --dev 5`. Fix prompts/schema until verdicts are sensible.
-- [ ] Telegram end-to-end test (user DMs @kimi_filmfinder_bot): answer + timing line; `ls` refused. Measure total end-to-end time and decide how it gets into the reply.
-- [ ] Go public: `dmPolicy: "open"`, `allowFrom: ["*"]` (needs user OK).
+- [x] `python find_film.py --dev 5` (see update above).
+- [x] Telegram end-to-end: tool called, timing line, `ls` refused.
+- [ ] Retest on Telegram after `/new`: the vague query should get one follow-up question; check the new timing label shows.
+- [ ] Go public: `dmPolicy: "open"`, `allowFrom: ["*"]` under `channels.telegram`. **Decision: wait until close to demo recording** so strangers don't eat quota during evals. The auto-mode classifier blocked the assistant from applying it; the user runs it: `! openclaw config patch '{channels:{telegram:{dmPolicy:"open",allowFrom:["*"]}}}' && systemctl --user restart openclaw-gateway` (patch syntax unverified).
 - [ ] `python eval.py tomt_dev_100.csv 30`, then 100; `python eval.py tomt_recent.csv`. Write `eval_results.md`.
 - [ ] `side_by_side.py` (Cerebras vs HF GPU, same prompt). Provider/model not chosen.
 - [ ] 9:00 AM IST panic check: no film-tool answers on Telegram means cut to the smallest working version.

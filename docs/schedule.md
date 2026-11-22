@@ -9,7 +9,7 @@ Changes from the cheat sheet: "Lock the Idea" is skipped (idea already decided),
 |---|---|---|---|
 | 01 Set Up | Sat 11:30 PM to Sun 12:50 AM | Pin context, Rules (coder), Rules brief, Docs folder, Deploy early | DONE |
 | 03 Plan | Sun 1:00 to 1:45 AM | Write the spec (PRD.md), Put the build on a clock | DONE |
-| 04 Build (part 1) | Sun 1:45 to 9:00 AM | Scaffold, Build one feature end to end, Wire an API you've never used, Seed demo data | in progress (blocked on Cerebras queue) |
+| 04 Build (part 1) | Sun 1:45 to 9:00 AM | Scaffold, Build one feature end to end, Wire an API you've never used, Seed demo data | in progress: bot answers via film tool on Telegram (5:55 AM) |
 | Sleep | Sun 9:00 AM to 5:00 PM | (record the demo before sleeping if the bot is ready and Cerebras is quiet) | |
 | 04 Build (part 2) / 06 Ship | Sun 5:00 to 8:30 PM | Fixes, Pre-demo hardening, README a reader can skim, Audit before deadline | |
 | 07 Demo + post | Sun 8:30 to 11:00 PM | Demo video shot list, Timed demo script, X post copy, Reddit post | |

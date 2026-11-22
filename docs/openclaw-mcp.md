@@ -37,3 +37,10 @@ CLI (works while the gateway runs; the change is sent to the gateway):
 
 ## Python side: `mcp` 2.3.0 (VERIFIED import 2026-11-22)
 In 2.x, FastMCP was renamed: `from mcp.server.mcpserver import MCPServer`; `s = MCPServer("filmfinder")`; `@s.tool()`; `s.run("stdio")`.
+
+## Tool Search defers MCP tools (FOUND 2026-11-22)
+Source: OpenClaw package docs `docs/tools/tool-search.md` (2026.11.6).
+- When `tools.toolSearch` is unset, embedded runs use structured Tool Search automatically: tool schemas are deferred and the model only sees `tool_search` / `tool_describe` / a call control. Our first Telegram test: Kimi never called `filmfinder__find_film` (it sat in the session's `deferred.entries`) and answered from memory.
+- Fixes: `tools.toolSearch: false` (direct schemas for every tool, all agents), or keep Tool Search and exclude our tool:
+  `"tools": {"toolSearch": {"exclude": [{"source": "mcp", "name": "filmfinder__*"}]}}`. An object without `mode` keeps the default structured surface; excluded tools keep their schemas and are directly callable.
+- Selectors are presentation only, not authorization: `alsoAllow` is still required.
