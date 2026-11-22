@@ -4,6 +4,7 @@ Source: official "Kimi K3.1 Pro Hackathon" PDF (11 pages, read 2026-11-21) plus 
 
 ## Hard requirements (miss any one and we're out)
 - **Window:** Sat Nov 21, 10:00 AM PT to Sun Nov 22, 10:00 AM PT, which is **Sat 11:30 PM to Sun 11:30 PM IST**. Posts must be published before the deadline.
+- **EXTENDED** (Discord @here from organizer InventorBlack, Nov 22): submissions accepted until **Sun Nov 22, 5:00 PM PT = Mon Nov 23, 6:30 AM IST**, because many people couldn't reach the model.
 - Kimi K3.1 Pro on Cerebras is a **central component**: model `moonshotai-kimi-k3.1-pro-trial`, standard API, our existing key.
 - The project **must use the OpenClaw harness.**
 - Core functionality is built during the 24h. Scaffolding, boilerplate and frameworks from before kickoff are allowed.

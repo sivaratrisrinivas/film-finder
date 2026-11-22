@@ -1,6 +1,6 @@
 # Schedule (from thehackathonplaybook.dev/cheat-sheet, adapted)
 
-All times IST. Kickoff Sat Nov 21, 11:30 PM. Deadline Sun Nov 22, 11:30 PM.
+All times IST. Kickoff Sat Nov 21, 11:30 PM. Deadline Sun Nov 22, 11:30 PM, **extended to Mon Nov 23, 6:30 AM IST** (Sun 5:00 PM PT, Discord announcement).
 Changes from the cheat sheet: "Lock the Idea" is skipped (idea already decided), and so are Devpost and judge Q&A (no judges). That effort goes to the 60-second video and the X post instead. "Deploy early" means the OpenClaw Telegram bot is reachable by other people. Commit every 30 minutes.
 
 **Sleep: Sun 9:00 AM to 5:00 PM.** That leaves about 8h of build before sleep and 3.5h after. Anything that needs Cerebras at full speed (evals, demo recording) should happen while capacity is free. Kickoff hour was overloaded (429 `queue_exceeded`).
