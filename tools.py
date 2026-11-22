@@ -35,15 +35,15 @@ def _get(url, params, headers):
     stats["misses"] += 1
     # urllib, not httpx2: Wikimedia returns 403 to httpx2 even with a proper User-Agent.
     req = urllib.request.Request(f"{url}?{urllib.parse.urlencode(params)}", headers=headers)
-    for attempt in range(5):  # home network resets ~half of TMDB TLS handshakes
+    for attempt in range(8):  # Indian networks reset most TMDB TLS handshakes; resets are fast
         try:
             with urllib.request.urlopen(req, timeout=15) as r:
                 data = json.loads(r.read())
             break
         except (ConnectionResetError, urllib.error.URLError) as e:
-            if attempt == 4 or isinstance(e, urllib.error.HTTPError):
+            if attempt == 7 or isinstance(e, urllib.error.HTTPError):
                 raise
-            time.sleep(0.5)
+            time.sleep(0.1)
     path.write_text(json.dumps(data))
     return data
 

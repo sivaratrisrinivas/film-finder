@@ -12,6 +12,7 @@ import tools
 
 URL = "https://api.cerebras.ai/v1/chat/completions"
 MODEL = "moonshotai-kimi-k3.1-pro-trial"
+TIMEOUT = 20  # seconds; the bot wants a fast "busy". eval.py raises it.
 
 # System prompts are constants so they stay byte-stable and get cached.
 CLUES_PROMPT = """You help identify films from half-remembered descriptions (like r/tipofmytongue).
@@ -87,7 +88,7 @@ def kimi(system, user, schema, name, effort, stats):
         "Content-Type": "application/json", "Authorization": f"Bearer {_key()}"})
     for delay in (1, 2, 4, 8, None):  # retry on 429 (~15s total), then give up as "busy"
         try:
-            with urllib.request.urlopen(req, timeout=20) as r:
+            with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
                 data = json.loads(r.read())
             break
         except TimeoutError:  # Cerebras sometimes queues silently instead of returning 429

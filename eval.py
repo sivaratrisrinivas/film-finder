@@ -67,7 +67,9 @@ def summarize(rows):
 
 
 def main(path, n=None):
+    import find_film as ff
     from find_film import find_film
+    ff.TIMEOUT = 120  # wait out Cerebras queueing; the bot keeps 20s
     posts = list(csv.DictReader(open(ROOT / path)))[: int(n) if n else None]
     out = ROOT / "runs" / (Path(path).stem + ".jsonl")
     out.parent.mkdir(exist_ok=True)

@@ -85,8 +85,10 @@ Next steps, in order:
 - [x] Telegram end-to-end: tool called, timing line, `ls` refused.
 - [x] Retest on Telegram after `/new` (6:00 AM IST): "guy stuck reliving things" got one follow-up (weatherman / soldier / wedding guest); "guest at a wedding" got Palm Springs (2020) with poster. New timing label shows with no gateway restart (`⚡ Kimi 5.15s · search+verify 34.56s`). The ask reply also carried a timing line (AGENTS.md says to send only the question; harmless). Round trip ~1 min, no 429 stalls.
 - [ ] Go public: `dmPolicy: "open"`, `allowFrom: ["*"]` under `channels.telegram`. **Decision: wait until close to demo recording** so strangers don't eat quota during evals. The auto-mode classifier blocked the assistant from applying it; the user runs it: `! openclaw config patch '{channels:{telegram:{dmPolicy:"open",allowFrom:["*"]}}}' && systemctl --user restart openclaw-gateway` (patch syntax unverified).
-- [ ] `python eval.py tomt_dev_100.csv 30`, then 100; `python eval.py tomt_recent.csv`. Write `eval_results.md`.
-- [ ] `side_by_side.py` (Cerebras vs HF GPU, same prompt). Provider/model not chosen.
+- [x] `python eval.py tomt_dev_100.csv 30` done twice (verify prompt tightened in between); results in `eval_results.md`. Confident wrong 19% → 7%, hit@1 ~48% hand-checked. Bug fixed: poster backfill took the first TMDB hit (wrong remake year), now passes Kimi's `year`. `max_completion_tokens` 4000 → 8000 (a `finish_reason=length` with no content caused a crash; missing content now → `busy`).
+- [ ] `python eval.py tomt_recent.csv`: 9 of 13 busy (Cerebras queue). Rerun the busy ones when quiet. Then the 100-post dev eval if quota allows.
+- [ ] `side_by_side.py` written (Cerebras vs `moonshotai/Kimi-K3.1-Pro:nebius` vs `:together` via HF router, same model and prompt, streaming, live rows). `HF_TOKEN` in `.env`. Docs: `docs/hf-inference.md`. HF rows tested (Nebius 154 tok/s, Together 38 tok/s). **Cerebras row not run yet**: queue was 42s at 7:05 AM IST. Record the race only when queue < 2s. Earlier Cerebras sample: ~247 tok/s, so the gap vs Nebius may be small; vs Together large.
+- The background watcher loop was blocked by the auto-mode classifier; the 30-min timer now does one queue check per tick instead.
 - [ ] 9:00 AM IST panic check: no film-tool answers on Telegram means cut to the smallest working version.
 
 ## How to resume in a new session
