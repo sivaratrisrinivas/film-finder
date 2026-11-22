@@ -13,6 +13,8 @@ Read the matching file in docs/ before writing code against that API. Never use 
 - `docs/openclaw-telegram.md`: OpenClaw Telegram channel setup and DM access policy. Read before touching the bot.
 - `docs/tmdb.md`: TMDB search/details/keywords endpoints. Read before writing the TMDB tool.
 - `docs/wikipedia.md`: MediaWiki search and extract API. Read before writing the Wikipedia tool.
+- `docs/hf-inference.md`: Hugging Face Inference Providers (GPU side of `side_by_side.py` only). Read before any HF call.
+- `docs/demo.md`: 60s demo video plan and pre-recording checklist. Read before demo or post work.
 
 The four working principles adapt Andrej Karpathy's observations on the mistakes AI coding assistants make (posted on X, 2026: x.com/karpathy/status/2015883857489522876), popularized as a CLAUDE.md by Forrest Chang (github.com/forrestchang/andrej-karpathy-skills).
 
