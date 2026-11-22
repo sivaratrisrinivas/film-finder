@@ -34,6 +34,7 @@ Eval on solved r/tipofmytongue posts (`eval_results.md`, traces in `runs/`):
 | Correct first answer (hand-checked) | ~40/97 (41%) | 1/13 |
 | Confidently wrong | 14/97 (14%) | 4/13 (31%) |
 | Asked a question or said "not sure" | 42/97 | 8/13 (2 asks had the right film as top candidate) |
+| Right when it answered (precision) | ~40/54 (74%) | 1/5 (20%) |
 
 The recent posts were written after the model's training data. The gap between the two columns suggests the old-post numbers are helped by memorized threads.
 
