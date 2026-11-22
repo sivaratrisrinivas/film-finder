@@ -97,6 +97,16 @@ Next steps, in order:
 - [x] Telegram round trip re-measured (12:47 PM IST, hook text after `/new`): reply in the same minute (<60s), `⚡ Kimi 6.22s · search+verify 9.71s`. Poster URL moved to the last line (`agent/AGENTS.md`), took effect after `/new` with no gateway restart.
 - [x] Bot PUBLIC (12:55 PM IST): `dmPolicy: "open"`, `allowFrom: ["*"]`. Working syntax: `echo '{channels:{telegram:{dmPolicy:"open",allowFrom:["*"]}}}' | openclaw config patch --stdin` (no inline arg). Revert: same with `dmPolicy:"pairing"`.
 - [ ] Record the 60s video (only when the Cerebras queue < 2s), then post on X and Reddit before 11:30 PM IST.
+  - **Recording status (2:15 PM IST, user away until ~6 PM):** edit assets + scripts in `C:\Users\Srinivas\Downloads\filmfinder_edit\` (WSL: `/mnt/c/Users/Srinivas/Downloads/filmfinder_edit/`). All 1080x1350, dark top caption band, Segoe UI from `/mnt/c/Windows/Fonts`, made with ffmpeg in WSL.
+    - DONE `shot1.mp4` (15s): Charlie Wilson's War take, cropped to chat pane, first frame held 2s, ~48s wait cut, caption "wait trimmed (~48s real time)".
+    - DONE `shot2.mp4` (6s): follow-up FALLBACK, slow zoom on the real 12:49 PM screenshot, labelled "real reply, screenshot from 12:49 PM". Replace with a live take if Cerebras clears (`/new`, "guy stuck reliving things", answer "guest at a wedding", don't scroll).
+    - DONE `honesty.mp4` (7s), `cta.mp4` (5s).
+    - TODO Take 3 speed race (`python side_by_side.py`, user records the terminal with Cap). Plan: keep probing until ~7 PM; if Cerebras never clears, use a numbers card (293 / 192 / 44 tok/s, 5-run medians).
+    - TODO join: shot1 -> shot2 -> race -> honesty -> cta (<=60s), then post.
+    - Helpers: `caption.py IN OUT 'start|end|line1|line2|small' ...` (input must be 1080x1040; pads to 1350); `card.py OUT SECONDS 'size|color|text' ...`. drawtext needs `expansion=none` (for %) and one call per line (newlines render as boxes).
+    - Cerebras: 429 `queue_exceeded` on every probe from 12:38 to 2:11 PM IST. Bot replied OK at 12:47/12:49/1:27 despite that, then "busy" at 1:38.
+    - Bot is PUBLIC but the gateway only runs while the laptop is on. MCP `connectionTimeoutMs` raised to 60000 (a >20s cold start during Cap recording broke one turn).
+    - Cap recorded the whole browser window (sidebar with other chats is visible); always crop to the chat pane: for a 1354x720 recording, `crop=644:620:530:90`.
 - Cerebras congestion pattern seen: busy ~1:30–5:10 AM and ~7:00–9:15 AM IST, quiet ~9:15 AM–12:30 PM IST. Expect the worst load near the deadline (8:30–11:30 PM IST); don't plan to record then.
 
 ## How to resume in a new session
