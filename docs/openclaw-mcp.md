@@ -22,7 +22,7 @@ CLI (works while the gateway runs; the change is sent to the gateway):
 - `openclaw mcp add` and `mcp probe` refuse to run while the gateway is up ("requires exclusive offline state ownership"). Run `systemctl --user stop openclaw-gateway`, then the command, then `start`. `mcp show` and `mcp status` work online. `config set` works online and hot-reloads.
 - `mcp add` gives the server 5s to start by default. Our Python server needs about 3.2s warm, so a cold start timed out. Registered with `--connect-timeout 20` (`connectionTimeoutMs: 20000`).
 
-**Our registration (DONE 2026-11-22):** `mcp.servers.filmfinder = {command: <repo>/.venv/bin/python, args: ["mcp_server.py"], cwd: <repo>, connectionTimeoutMs: 20000}`; `agents.entries.filmfinder.tools.alsoAllow: ["filmfinder__*"]`.
+**Our registration (DONE 2026-11-22):** `mcp.servers.filmfinder = {command: <repo>/.venv/bin/python, args: ["mcp_server.py"], cwd: <repo>, connectionTimeoutMs: 60000}` (raised from 20000 on Nov 22 1:25 PM IST after a >20s cold start during screen recording); `agents.entries.filmfinder.tools.alsoAllow: ["filmfinder__*"]`.
 
 ## Env and secrets
 - OpenClaw rejects interpreter-startup and loader env keys (`PYTHONSTARTUP`, `NODE_OPTIONS`, `LD_*`, ...).
