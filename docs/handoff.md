@@ -83,7 +83,7 @@ Files (all committed and pushed):
 Next steps, in order:
 - [x] `python find_film.py --dev 5` (see update above).
 - [x] Telegram end-to-end: tool called, timing line, `ls` refused.
-- [ ] Retest on Telegram after `/new`: the vague query should get one follow-up question; check the new timing label shows.
+- [x] Retest on Telegram after `/new` (6:00 AM IST): "guy stuck reliving things" got one follow-up (weatherman / soldier / wedding guest); "guest at a wedding" got Palm Springs (2020) with poster. New timing label shows with no gateway restart (`⚡ Kimi 5.15s · search+verify 34.56s`). The ask reply also carried a timing line (AGENTS.md says to send only the question; harmless). Round trip ~1 min, no 429 stalls.
 - [ ] Go public: `dmPolicy: "open"`, `allowFrom: ["*"]` under `channels.telegram`. **Decision: wait until close to demo recording** so strangers don't eat quota during evals. The auto-mode classifier blocked the assistant from applying it; the user runs it: `! openclaw config patch '{channels:{telegram:{dmPolicy:"open",allowFrom:["*"]}}}' && systemctl --user restart openclaw-gateway` (patch syntax unverified).
 - [ ] `python eval.py tomt_dev_100.csv 30`, then 100; `python eval.py tomt_recent.csv`. Write `eval_results.md`.
 - [ ] `side_by_side.py` (Cerebras vs HF GPU, same prompt). Provider/model not chosen.
