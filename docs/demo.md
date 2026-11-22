@@ -30,15 +30,15 @@ Team: Srinivas. X [@SrinivasSi78619](https://x.com/SrinivasSi78619), Reddit u/sr
 ### X (official submission; attach the ≤60s video)
 One post (X Premium, so no 280 limit). The first line is the hook: it's all people see before "Show more".
 ```
-You remember the scene, not the title. I built a bot for that 🎬
+You know when a movie scene is stuck in your head but the title won't come? I typed one of those into my bot: a CIA guy who looks like John Goodman screams at someone in his office and then breaks a window.
 
-Film Finder: describe a movie you half-remember on Telegram, get the title, or an honest "not sure".
+It came back with Charlie Wilson's War. Then it pointed out that my description had the wrong actor. The guy screaming was Philip Seymour Hoffman, not John Goodman, and it still found the film.
 
-Kimi K3.1 Pro on @Cerebras pulls the clues out of your description, searches TMDB + Wikipedia, and checks its guess against your clues before answering. If it isn't sure, it asks one question instead of guessing.
+That's Film Finder, a Telegram bot I built for the Kimi K3.1 Pro hackathon. It pulls the clues out of whatever you half-remember, searches TMDB and Wikipedia, and checks its guess against those clues before answering. Kimi runs on @Cerebras at 293 tokens a second, while the same model on two GPU hosts ran at 192 and 44 (median of 5 runs each).
 
-Same model, same prompt: Kimi on Cerebras ran at 293 tok/s, vs 192 on Nebius and 44 on Together (GPU hosts via Hugging Face, median of 5 runs).
+That checking step matters because a confident wrong answer is worse than no answer. So when it isn't sure, it asks you one question or just says so. On 100 solved r/tipofmytongue posts it got 41 right on the first answer and 14 wrong, and the rest went to a follow-up or a "not sure".
 
-Try it: https://t.me/kimi_filmfinder_bot
+Try it (live while Kimi access lasts, may say "busy" at peak): https://t.me/kimi_filmfinder_bot
 Code: https://github.com/sivaratrisrinivas/film-finder
 Team: @SrinivasSi78619
 
