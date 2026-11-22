@@ -26,6 +26,9 @@ For each candidate you get its metadata and plot summary. Decide:
 - "ask": one or more candidates are plausible but you cannot be sure; write ONE short follow-up question for the user that would best tell them apart or confirm the best one.
 - "not_sure": no candidate fits well, or the text is not a film description.
 Never pick a film that is not in the candidate list. Allow for misremembered details, but a wrong answer is much worse than "not_sure".
+Do not "answer" when: the match rests only on a premise many films share (a parasite, kids with powers, a haunted house); a mismatched clue contradicts a core plot event (who dies, who is revived, how it ends); or the candidate's year contradicts the user's era. Use "ask" instead.
+If the candidate is a book, story or remake with several film versions, use "ask" to find out which one, unless the user's era picks one.
+year is the release year of the film you pick: from the candidate data, or from the user's era if the candidate has none. Empty if unknown.
 candidate_index is the 0-based index of the best candidate (-1 if none). List the user's clues that the best candidate matches and contradicts."""
 
 CLUES_SCHEMA = {
@@ -51,8 +54,9 @@ VERIFY_SCHEMA = {
         "matched_clues": {"type": "array", "items": {"type": "string"}},
         "mismatched_clues": {"type": "array", "items": {"type": "string"}},
         "follow_up_question": {"type": "string"},
+        "year": {"type": "string"},
     },
-    "required": ["verdict", "candidate_index", "matched_clues", "mismatched_clues", "follow_up_question"],
+    "required": ["verdict", "candidate_index", "matched_clues", "mismatched_clues", "follow_up_question", "year"],
     "additionalProperties": False,
 }
 
@@ -96,7 +100,11 @@ def kimi(system, user, schema, name, effort, stats):
             time.sleep(delay)
     stats["kimi_seconds"] += data["time_info"]["total_time"]
     stats["tokens"] += data["usage"]["prompt_tokens"] + data["usage"]["completion_tokens"]
-    return json.loads(data["choices"][0]["message"]["content"])
+    msg = data["choices"][0]["message"]
+    if "content" not in msg:
+        print(f"kimi: no content, finish_reason={data['choices'][0].get('finish_reason')}", file=sys.stderr)
+        raise Busy()
+    return json.loads(msg["content"])
 
 
 def _safe(fn, *args):
@@ -162,7 +170,7 @@ def find_film(description):
 
     best = cands[v["candidate_index"]] if 0 <= v["candidate_index"] < len(cands) else {}
     if v["verdict"] != "not_sure" and best and not best.get("poster_url"):
-        hit = (_safe(tools.tmdb_search, best["title"]) or [None])[0]
+        hit = (_safe(tools.tmdb_search, best["title"], v["year"] or None) or [None])[0]
         if hit:
             best.update(tmdb_id=hit["tmdb_id"], year=best["year"] or hit["year"],
                         poster_url=(_safe(tools.tmdb_details, hit["tmdb_id"]) or {}).get("poster_url"))
