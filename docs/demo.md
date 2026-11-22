@@ -9,8 +9,8 @@ Hard rules (hackathon.md): ≤60s; no notifications, browser tabs, API keys, ema
 | 0–3s | Hook | Telegram: user types a vague memory, e.g. "anime short, astronaut finds a space station that's a dead opera singer's memories" | "You remember the scene. Not the title." |
 | 3–15s | Answer | Bot replies: 🎬 title, poster, matched clues, `⚡ Kimi Xs · search+verify Ys` | "Kimi K3.1 Pro on Cerebras pulls the clues, searches TMDB and Wikipedia, and checks its guess." |
 | 15–28s | Follow-up | Vague message ("guy stuck reliving things") → one question → "guest at a wedding" → Palm Springs | "Not sure? It asks one question instead of guessing." |
-| 28–48s | Speed race | `python side_by_side.py`: same model, same prompt, Cerebras vs Nebius vs Together, live tok/s | "Same model on GPUs vs Cerebras." (exact claim written from the recorded numbers only) |
-| 48–56s | Honesty card | Eval numbers from `eval_results.md` (hit@1, % confident wrong) | "Wrong only X% of the time. Otherwise it says so." |
+| 28–48s | Speed race | `python side_by_side.py`: same model, same prompt, Cerebras vs Nebius vs Together, live tok/s | "Same model, same prompt. Cerebras: ~290 tokens/sec. GPU hosts: ~190 and ~45." (5-run medians: 293 / 192 / 44 tok/s; say tok/s, not "answers first") |
+| 48–56s | Honesty card | "100 solved r/tipofmytongue posts: 41% right first try, 14% wrong, the rest it asked or said not sure" | "When it isn't sure, it asks instead of guessing." |
 | 56–60s | CTA | Bot handle + repo URL | "Try it: @kimi_filmfinder_bot" |
 
 ## Must be true before recording
@@ -36,7 +36,7 @@ Film Finder: describe a movie you half-remember on Telegram, get the title, or a
 
 Kimi K3.1 Pro on @Cerebras pulls the clues out of your description, searches TMDB + Wikipedia, and checks its guess against your clues before answering. If it isn't sure, it asks one question instead of guessing.
 
-Same model, same prompt: Cerebras [X] tok/s vs [Y] tok/s on the fastest GPU host we tested.
+Same model, same prompt: Kimi on Cerebras ran at 293 tok/s, vs 192 on Nebius and 44 on Together (GPU hosts via Hugging Face, median of 5 runs).
 
 Try it: https://t.me/kimi_filmfinder_bot
 Code: https://github.com/sivaratrisrinivas/film-finder
@@ -52,9 +52,9 @@ I built a Telegram bot (@kimi_filmfinder_bot) for those "what was that movie whe
 
 How it works: Kimi K3.1 Pro on Cerebras extracts clues from your description (era, scenes, which details you might be misremembering), searches TMDB and Wikipedia, then verifies the real candidates against your clues. It answers only if the guess holds up; otherwise it asks one follow-up question or says it's not sure. It can only pick films the search actually returned, so it can't invent one.
 
-Honest numbers (old solved r/tipofmytongue posts): ~48% right on the first answer, 7% confidently wrong (down from 19% after tightening the verify step). [Recent-posts result.] Caveat: old threads may be in the training data.
+Honest numbers: on 100 old solved r/tipofmytongue posts it was right on the first answer ~41% of the time and confidently wrong 14%; the rest it asked a question or said not sure. On 13 posts from the last two months (which the model can't have memorized) it was much weaker: 1 right, 2 asks pointing at the right film, 4 wrong. Tightening the verify step and testing on fresh posts is the next step.
 
-Speed: same model and prompt on Cerebras vs GPU hosts via Hugging Face: [numbers].
+Speed: same model and prompt, median of 5 runs: Cerebras 293 tok/s, Nebius 192, Together 44 (GPU hosts via Hugging Face). Cerebras had the highest throughput; on this short task Nebius still finished first because Kimi wrote fewer reasoning tokens there.
 
 Video: [link] · Code: https://github.com/sivaratrisrinivas/film-finder
 ```

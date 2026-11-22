@@ -27,17 +27,25 @@ your message ─► OpenClaw agent (Kimi) ─► find_film tool
 - Every TMDB and Wikipedia call is cached on disk.
 
 ## Results
-Eval on old solved r/tipofmytongue posts (`eval_results.md`, traces in `runs/`):
+Eval on solved r/tipofmytongue posts (`eval_results.md`, traces in `runs/`):
 
-| | First 30 dev posts |
-|---|---|
-| Correct first answer (hand-checked) | ~14/29 (48%) |
-| Confidently wrong | 2/29 (7%), down from 19% before the stricter verify prompt |
-| Asked a question or said "not sure" | 12/29 |
+| | 100 old dev posts | 13 recent posts (Oct–Nov 2026) |
+|---|---|---|
+| Correct first answer (hand-checked) | ~40/97 (41%) | 1/13 |
+| Confidently wrong | 14/97 (14%) | 4/13 (31%) |
+| Asked a question or said "not sure" | 42/97 | 8/13 (2 asks had the right film as top candidate) |
 
-Recent posts (Oct–Nov 2026, after the model's training data) and the full 100-post run: *pending; Cerebras trial capacity was saturated.*
+The recent posts were written after the model's training data. The gap between the two columns suggests the old-post numbers are helped by memorized threads.
 
-Speed, same model and same prompt on three providers (`side_by_side.py`): *pending.*
+Speed, same model (Kimi K3.1 Pro) and same prompt, median of 5 runs (`side_by_side.py`):
+
+| | First token | tokens/sec | Total |
+|---|---|---|---|
+| Cerebras | 1.04s | **293** | 2.39s |
+| Nebius (GPU, via HF) | 0.75s | 192 | 1.55s |
+| Together (GPU, via HF) | 0.97s | 44 | 4.84s |
+
+Cerebras has the highest throughput. On this short task Kimi wrote more reasoning tokens on Cerebras, so Nebius finished first.
 
 ## Run it yourself
 Requires Python 3.14 and `pip install mcp`.

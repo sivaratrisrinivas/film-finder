@@ -60,3 +60,13 @@ Same model (Kimi K3.1 Pro), same prompt, `reasoning_effort: medium`, streaming, 
 | Together (GPU, via HF) | 6.99s | 206 | 52 | 10.98s |
 
 All three answered Into the Wild (2007). One run, short outputs; tok/s over ~1s of generation is noisy.
+
+### 5-run medians (`python side_by_side.py 2 5`, Nov 22 ~12:30 PM IST, queue 0.76s before start)
+
+| | First token | tok/s | Total | OK runs |
+|---|---|---|---|---|
+| Cerebras | 1.04s | **293** | 2.39s | 3/5 (2× HTTP 429; body not captured) |
+| Nebius (GPU, via HF) | 0.75s | 192 | **1.55s** | 5/5 |
+| Together (GPU, via HF) | 0.97s | 44 | 4.84s | 5/5 |
+
+Cerebras generates fastest (~1.5× Nebius, ~6.7× Together), but on this short task it wrote more tokens (more reasoning: ~280 vs ~160) and finished later than Nebius. Honest claim: "highest tokens/second of the three"; not "answers faster than every GPU host".

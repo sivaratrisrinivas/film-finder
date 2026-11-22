@@ -7,6 +7,7 @@ to all three backends at once and shows a live race. The bot itself only uses Ce
 """
 import csv
 import json
+import statistics
 import sys
 import threading
 import time
@@ -85,7 +86,7 @@ def show(states, t0):
     return lines
 
 
-def main(idx=2):
+def main(idx=2, runs=1):
     row = list(csv.DictReader(open(ROOT / "tomt_dev_100.csv")))[int(idx)]
     print(f"Post: {row['query'][:200]}...\n(building candidates: clues + search, not timed)")
     cache = ROOT / ".cache" / f"side_by_side_{idx}.json"
@@ -94,20 +95,32 @@ def main(idx=2):
     else:
         user = verify_input(row["query"])
         cache.write_text(json.dumps(user))
-    states = [{"chunks": 0, "answer": ""} for _ in RACERS]
     print("\nSame model (Kimi K3.1 Pro), same prompt, three providers:\n")
-    t0 = time.time()
-    threads = [threading.Thread(target=race, args=(lbl, url, model, env(k), user, st))
-               for (lbl, url, model, k), st in zip(RACERS, states)]
-    for t in threads:
-        t.start()
-    print("\n" * (len(RACERS) - 1))
-    while any(t.is_alive() for t in threads):
-        print(f"\033[{len(RACERS)}F" + "\n".join(l + "\033[K" for l in show(states, t0)), flush=True)
-        time.sleep(0.1)
-    print(f"\033[{len(RACERS)}F" + "\n".join(l + "\033[K" for l in show(states, t0)))
-    for (label, *_), st in zip(RACERS, states):
+    rounds = []
+    for _ in range(int(runs)):
+        states = [{"chunks": 0, "answer": ""} for _ in RACERS]
+        t0 = time.time()
+        threads = [threading.Thread(target=race, args=(lbl, url, model, env(k), user, st))
+                   for (lbl, url, model, k), st in zip(RACERS, states)]
+        for t in threads:
+            t.start()
+        print("\n" * (len(RACERS) - 1))
+        while any(t.is_alive() for t in threads):
+            print(f"\033[{len(RACERS)}F" + "\n".join(l + "\033[K" for l in show(states, t0)), flush=True)
+            time.sleep(0.1)
+        print(f"\033[{len(RACERS)}F" + "\n".join(l + "\033[K" for l in show(states, t0)) + "\n")
+        rounds.append(states)
+    for (label, *_), st in zip(RACERS, rounds[-1]):
         print(f"\n--- {label} ---\n{st['answer'].strip()[:400]}")
+    if len(rounds) > 1:
+        print(f"\nMedians over {len(rounds)} runs (errors excluded):")
+        for i, (label, *_) in enumerate(RACERS):
+            ok = [r[i] for r in rounds if "error" not in r[i] and "first" in r[i]]
+            toks = [(st.get("usage") or {}).get("completion_tokens") or st["chunks"] for st in ok]
+            rate = [t / (st["done"] - st["first"]) for t, st in zip(toks, ok) if st["done"] - st["first"] > 0]
+            med = lambda xs: statistics.median(xs) if xs else float("nan")
+            print(f"{label:<15} first token {med([s['first'] for s in ok]):5.2f}s | {med(rate):6.0f} tok/s | "
+                  f"total {med([s['done'] for s in ok]):6.2f}s | {len(ok)}/{len(rounds)} ok")
 
 
 if __name__ == "__main__":
