@@ -80,7 +80,7 @@ def kimi(system, user, schema, name, effort, stats):
         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
         "reasoning_effort": effort,
         "response_format": {"type": "json_schema", "json_schema": {"name": name, "schema": schema, "strict": True}},
-        "max_completion_tokens": 4000,
+        "max_completion_tokens": 8000,
         "prompt_cache_key": "film-finder",
     }).encode()
     req = urllib.request.Request(URL, data=body, headers={
