@@ -94,8 +94,8 @@ Next steps, in order:
 
 ### Next steps, in order (Nov 22, ~12:40 PM IST)
 - [x] Demo hook (12:45 PM IST): **Charlie Wilson's War** (misremembered actor: John Goodman → Philip Seymour Hoffman). Local Hero and Fish Story (short one-line prompt) also 2/2 correct, as backups. Kimi ~3s, search+verify 5–9s each.
-- [ ] Re-measure the Telegram round trip (user sends one fresh message after `/new`). It was ~1 min this morning (OpenClaw context ~15s + slow TMDB). If waits are cut in the video, caption "trimmed".
-- [ ] Go public right before recording: `dmPolicy: "open"`, `allowFrom: ["*"]` under `channels.telegram` (user runs it; command in the earlier item above).
+- [x] Telegram round trip re-measured (12:47 PM IST, hook text after `/new`): reply in the same minute (<60s), `⚡ Kimi 6.22s · search+verify 9.71s`. Poster URL moved to the last line (`agent/AGENTS.md`), took effect after `/new` with no gateway restart.
+- [x] Bot PUBLIC (12:55 PM IST): `dmPolicy: "open"`, `allowFrom: ["*"]`. Working syntax: `echo '{channels:{telegram:{dmPolicy:"open",allowFrom:["*"]}}}' | openclaw config patch --stdin` (no inline arg). Revert: same with `dmPolicy:"pairing"`.
 - [ ] Record the 60s video (only when the Cerebras queue < 2s), then post on X and Reddit before 11:30 PM IST.
 - Cerebras congestion pattern seen: busy ~1:30–5:10 AM and ~7:00–9:15 AM IST, quiet ~9:15 AM–12:30 PM IST. Expect the worst load near the deadline (8:30–11:30 PM IST); don't plan to record then.
 
